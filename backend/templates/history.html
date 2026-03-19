@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scan History — PhishingGuard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg:#0a0e1a; --panel:#111827; --border:#1e2d45; --accent:#00d4ff; --accent2:#ff3c6e; --green:#00ff88; --yellow:#ffd60a; --text:#e2e8f0; --muted:#64748b; --sidebar-w:240px; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:var(--bg); font-family:'Syne',sans-serif; color:var(--text); display:flex; min-height:100vh; }
+    .sidebar { width:var(--sidebar-w); background:var(--panel); border-right:1px solid var(--border); display:flex; flex-direction:column; position:fixed; height:100vh; z-index:100; }
+    .sidebar-logo { padding:28px 24px; border-bottom:1px solid var(--border); }
+    .sidebar-logo .name { font-size:18px; font-weight:800; }
+    .sidebar-logo .name span { color:var(--accent); }
+    .sidebar-logo .tagline { font-size:11px; color:var(--muted); margin-top:2px; }
+    .nav { flex:1; padding:20px 12px; }
+    .nav-item { display:flex; align-items:center; gap:12px; padding:11px 14px; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; color:var(--muted); transition:all .2s; text-decoration:none; margin-bottom:4px; }
+    .nav-item:hover { background:rgba(0,212,255,0.07); color:var(--text); }
+    .nav-item.active { background:rgba(0,212,255,0.12); color:var(--accent); }
+    .nav-item .icon { font-size:18px; width:22px; text-align:center; }
+    .sidebar-user { padding:16px 20px; border-top:1px solid var(--border); }
+    .user-badge { display:flex; align-items:center; gap:10px; }
+    .user-avatar { width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg, var(--accent), var(--accent2)); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; color:#000; flex-shrink:0; }
+    .user-name { font-size:13px; font-weight:600; }
+    .user-email { font-size:11px; color:var(--muted); }
+    .logout-btn { margin-top:12px; width:100%; padding:8px; background:transparent; border:1px solid var(--border); border-radius:6px; color:var(--muted); font-size:12px; font-family:'Syne',sans-serif; cursor:pointer; transition:all .2s; }
+    .logout-btn:hover { border-color:var(--accent2); color:var(--accent2); }
+    .main { margin-left:var(--sidebar-w); flex:1; padding:32px; }
+    .page-header { margin-bottom:28px; display:flex; align-items:center; justify-content:space-between; }
+    .page-header h1 { font-size:28px; font-weight:800; letter-spacing:-0.5px; }
+    .page-header p { color:var(--muted); font-size:14px; margin-top:4px; }
+
+    .filters { display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap; }
+    .filter-btn { padding:8px 16px; border-radius:20px; border:1px solid var(--border); background:transparent; color:var(--muted); font-family:'Syne',sans-serif; font-size:13px; cursor:pointer; transition:all .2s; }
+    .filter-btn:hover, .filter-btn.active { border-color:var(--accent); color:var(--accent); background:rgba(0,212,255,0.08); }
+    .filter-btn.active-red { border-color:var(--accent2); color:var(--accent2); background:rgba(255,60,110,0.08); }
+
+    .history-table { background:var(--panel); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+    .table-header { display:grid; grid-template-columns:100px 1fr 80px 80px 160px 50px; gap:16px; padding:14px 20px; border-bottom:1px solid var(--border); font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:1px; }
+    .table-row { display:grid; grid-template-columns:100px 1fr 80px 80px 160px 50px; gap:16px; padding:14px 20px; border-bottom:1px solid var(--border); align-items:center; transition:background .15s; }
+    .table-row:last-child { border-bottom:none; }
+    .table-row:hover { background:rgba(0,212,255,0.03); }
+
+    .badge { padding:4px 10px; border-radius:4px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; display:inline-block; }
+    .badge-safe { background:rgba(0,255,136,0.12); color:var(--green); }
+    .badge-medium { background:rgba(255,214,10,0.12); color:var(--yellow); }
+    .badge-high { background:rgba(255,107,0,0.12); color:#ff6b00; }
+    .badge-critical { background:rgba(255,60,110,0.12); color:var(--accent2); }
+
+    .url-cell { font-family:'Space Mono',monospace; font-size:12px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .count-cell { font-family:'Space Mono',monospace; font-size:13px; text-align:center; }
+    .time-cell { font-size:12px; color:var(--muted); }
+
+    .del-btn { background:transparent; border:none; color:var(--muted); cursor:pointer; font-size:16px; padding:4px; border-radius:4px; transition:color .2s; }
+    .del-btn:hover { color:var(--accent2); }
+
+    .pagination { display:flex; gap:8px; justify-content:center; margin-top:20px; align-items:center; }
+    .page-btn { padding:8px 14px; border-radius:6px; border:1px solid var(--border); background:transparent; color:var(--muted); font-family:'Syne',sans-serif; font-size:13px; cursor:pointer; transition:all .2s; }
+    .page-btn:hover, .page-btn.active { border-color:var(--accent); color:var(--accent); }
+    .page-btn:disabled { opacity:.3; cursor:not-allowed; }
+
+    .empty-state { text-align:center; padding:60px 20px; color:var(--muted); }
+    .empty-state .icon { font-size:48px; margin-bottom:12px; }
+    .loading { text-align:center; padding:40px; color:var(--muted); }
+  </style>
+</head>
+<body>
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <div class="name">Phishing<span>Guard</span></div>
+      <div class="tagline">Real-time threat protection</div>
+    </div>
+    <div class="nav">
+      <a href="/dashboard" class="nav-item"><span class="icon">📊</span> Dashboard</a>
+      <a href="/history" class="nav-item active"><span class="icon">🕓</span> Scan History</a>
+      <a href="/profile" class="nav-item"><span class="icon">👤</span> Profile</a>
+    </div>
+    <div class="sidebar-user">
+      <div class="user-badge">
+        <div class="user-avatar" id="userInitial">?</div>
+        <div>
+          <div class="user-name" id="userName">Loading…</div>
+          <div class="user-email" id="userEmail"></div>
+        </div>
+      </div>
+      <button class="logout-btn" onclick="logout()">Sign Out</button>
+    </div>
+  </nav>
+
+  <main class="main">
+    <div class="page-header">
+      <div>
+        <h1>Scan History</h1>
+        <p>All URLs scanned by your extension</p>
+      </div>
+    </div>
+
+    <div class="filters">
+      <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
+      <button class="filter-btn" onclick="setFilter('safe',this)">✅ Safe</button>
+      <button class="filter-btn" onclick="setFilter('medium',this)">⚠️ Medium</button>
+      <button class="filter-btn" onclick="setFilter('high',this)">🔶 High</button>
+      <button class="filter-btn" onclick="setFilter('critical',this)">🚨 Critical</button>
+    </div>
+
+    <div class="history-table">
+      <div class="table-header">
+        <div>Status</div>
+        <div>URL</div>
+        <div style="text-align:center">Threats</div>
+        <div></div>
+        <div>Time</div>
+        <div></div>
+      </div>
+      <div id="scanList"><div class="loading">Loading…</div></div>
+    </div>
+
+    <div class="pagination" id="pagination"></div>
+  </main>
+
+  <script>
+    const API = 'http://localhost:5000';
+    const token = localStorage.getItem('pd_token');
+    if (!token) window.location.href = '/login';
+
+    const user = JSON.parse(localStorage.getItem('pd_user') || '{}');
+    document.getElementById('userName').textContent = user.name || '—';
+    document.getElementById('userEmail').textContent = user.email || '';
+    document.getElementById('userInitial').textContent = (user.name || 'U')[0].toUpperCase();
+
+    let currentPage = 1, currentFilter = 'all', totalPages = 1;
+
+    function logout() {
+      localStorage.removeItem('pd_token'); localStorage.removeItem('pd_user');
+      window.location.href = '/login';
+    }
+
+    function setFilter(f, el) {
+      currentFilter = f; currentPage = 1;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+      loadScans();
+    }
+
+    async function loadScans() {
+      const el = document.getElementById('scanList');
+      el.innerHTML = '<div class="loading">Loading…</div>';
+
+      let url = `${API}/api/scans?page=${currentPage}&limit=15`;
+      const res = await fetch(url, { headers: { 'Authorization': 'Bearer ' + token } });
+      if (res.status === 401) { logout(); return; }
+      const data = await res.json();
+
+      let scans = data.scans || [];
+      if (currentFilter !== 'all') scans = scans.filter(s => s.status === currentFilter);
+      totalPages = data.pages;
+
+      if (scans.length === 0) {
+        el.innerHTML = '<div class="empty-state"><div class="icon">🔍</div><p>No scans found.</p></div>';
+        document.getElementById('pagination').innerHTML = '';
+        return;
+      }
+
+      el.innerHTML = scans.map(s => {
+        let hostname = s.url;
+        try { hostname = new URL(s.url).hostname; } catch(e) {}
+        const time = new Date(s.scanned_at).toLocaleString();
+        return `
+          <div class="table-row" id="row-${s._id}">
+            <div><span class="badge badge-${s.status}">${s.status}</span></div>
+            <div class="url-cell" title="${s.url}">${hostname}</div>
+            <div class="count-cell">${s.threat_count}</div>
+            <div></div>
+            <div class="time-cell">${time}</div>
+            <div><button class="del-btn" onclick="deleteScan('${s._id}')" title="Delete">🗑</button></div>
+          </div>`;
+      }).join('');
+
+      renderPagination();
+    }
+
+    function renderPagination() {
+      const el = document.getElementById('pagination');
+      if (totalPages <= 1) { el.innerHTML = ''; return; }
+      let html = `<button class="page-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>← Prev</button>`;
+      for (let i = 1; i <= totalPages; i++) {
+        html += `<button class="page-btn ${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>`;
+      }
+      html += `<button class="page-btn" onclick="goPage(${currentPage+1})" ${currentPage===totalPages?'disabled':''}>Next →</button>`;
+      el.innerHTML = html;
+    }
+
+    function goPage(p) { if (p < 1 || p > totalPages) return; currentPage = p; loadScans(); }
+
+    async function deleteScan(id) {
+      if (!confirm('Delete this scan record?')) return;
+      const res = await fetch(`${API}/api/scans/${id}`, { method:'DELETE', headers:{'Authorization':'Bearer '+token} });
+      if (res.ok) { document.getElementById('row-' + id)?.remove(); }
+    }
+
+    loadScans();
+  </script>
+</body>
+</html>

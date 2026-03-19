@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>PhishingGuard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+
+    <div class="header">
+      <div class="header-icon">🛡️</div>
+      <h1>PhishingGuard</h1>
+    </div>
+
+    <!-- AUTH SCREEN -->
+    <div id="auth-screen" style="display:none;">
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-login">Login</button>
+        <button class="auth-tab" id="tab-register">Register</button>
+      </div>
+
+      <div id="login-form" class="auth-form">
+        <div class="field-group">
+          <label>Email</label>
+          <input type="email" id="login-email" placeholder="you@example.com">
+        </div>
+        <div class="field-group">
+          <label>Password</label>
+          <input type="password" id="login-password" placeholder="••••••••">
+        </div>
+        <div id="login-error" class="auth-error"></div>
+        <button class="auth-btn" id="login-btn">Sign In →</button>
+      </div>
+
+      <div id="register-form" class="auth-form" style="display:none;">
+        <div class="field-group">
+          <label>Full Name</label>
+          <input type="text" id="reg-name" placeholder="John Doe">
+        </div>
+        <div class="field-group">
+          <label>Email</label>
+          <input type="email" id="reg-email" placeholder="you@example.com">
+        </div>
+        <div class="field-group">
+          <label>Password</label>
+          <input type="password" id="reg-password" placeholder="Min. 6 characters">
+        </div>
+        <div id="reg-error" class="auth-error"></div>
+        <button class="auth-btn" id="reg-btn">Create Account →</button>
+      </div>
+    </div>
+
+    <!-- MAIN SCREEN -->
+    <div id="main-screen" style="display:none;">
+
+      <div class="user-bar">
+        <span class="user-greeting">👤 <span id="user-name">User</span></span>
+        <div style="display:flex;gap:6px;">
+          <button class="icon-btn" id="dashboard-btn" title="Open Dashboard">📊</button>
+          <button class="icon-btn" id="logout-btn" title="Sign Out">⏏</button>
+        </div>
+      </div>
+
+      <div id="status-container">
+        <div id="status" class="status-safe">
+          <div class="status-icon">✓</div>
+          <div class="status-text">Analyzing...</div>
+        </div>
+      </div>
+
+      <div class="url-section">
+        <div class="label">Current URL:</div>
+        <div id="current-url" class="url-text">Loading...</div>
+      </div>
+
+      <div id="threats-container" style="display:none;">
+        <div class="section-title">⚠️ Detected Issues:</div>
+        <div id="threats-list"></div>
+      </div>
+
+      <div id="safe-message" style="display:none;">
+        <div class="safe-box">
+          <div class="safe-icon">✓</div>
+          <p>No phishing indicators detected.</p>
+          <p class="safe-note">Always verify URLs before entering sensitive info.</p>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <details>
+          <summary>What do we check?</summary>
+          <ul class="info-list">
+            <li>✓ HTTPS encryption</li>
+            <li>✓ Suspicious domain extensions</li>
+            <li>✓ Lookalike domains</li>
+            <li>✓ IP addresses instead of domain names</li>
+            <li>✓ Suspicious keywords and patterns</li>
+          </ul>
+        </details>
+      </div>
+    </div>
+
+    <div class="footer">
+      <small>💡 Tip: Always double-check URLs before entering passwords!</small>
+    </div>
+
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
