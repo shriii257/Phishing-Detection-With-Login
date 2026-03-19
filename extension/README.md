@@ -146,35 +146,6 @@ phishing-detector/
 - User reporting system
 - Whitelist/blacklist management
 
-## 🎓 Resume Talking Points
-
-When presenting this project:
-
-1. **Technical Skills**:
-   - Chrome Extension API (Manifest V3)
-   - JavaScript (ES6+)
-   - DOM manipulation
-   - Asynchronous programming
-   - Security best practices
-
-2. **Security Concepts**:
-   - Homograph attacks
-   - Phishing detection techniques
-   - SSL/TLS validation
-   - Domain analysis
-   - Threat severity classification
-
-3. **Problem Solving**:
-   - Real-world cybersecurity problem
-   - User-friendly warning system
-   - Multiple detection layers
-   - Performance optimization (runs on every page)
-
-4. **Project Highlights**:
-   - "Built a browser security extension that protects users from phishing attacks"
-   - "Implemented multi-layered threat detection with 8+ security checks"
-   - "Created real-time alerting system with severity-based notifications"
-   - "Designed intuitive UI for displaying complex security information"
 
 ## 🔧 Troubleshooting
 

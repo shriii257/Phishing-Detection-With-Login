@@ -8,7 +8,7 @@ const SUSPICIOUS_TLDS = ['.ru', '.tk', '.xyz', '.top', '.work', '.click', '.gq',
 const POPULAR_BRANDS = [
   'google', 'facebook', 'amazon', 'paypal', 'microsoft', 'apple', 
   'netflix', 'instagram', 'twitter', 'linkedin', 'ebay', 'yahoo',
-  'bankofamerica', 'chase', 'wellsfargo', 'citibank'
+  'bankofamerica', 'chase', 'wellsfargo', 'citibank', 'MNSBANK'
 ];
 
 // Common character substitutions used in phishing (homograph attacks)
