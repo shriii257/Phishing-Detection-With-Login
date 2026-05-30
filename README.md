@@ -2,7 +2,6 @@
 
 A full-stack cybersecurity tool that detects phishing websites in real time — right from your browser. It combines a Chrome extension that scans every URL you visit with a Flask + MongoDB backend that tracks your scan history, lets you manage your account, and gives you a proper dashboard to see what's been caught.
 
----
 
 ## What This Project Does
 
