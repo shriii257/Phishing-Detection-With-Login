@@ -1,6 +1,6 @@
 # Phishing Detection Extension with Login
 
-A full-stack cybersecurity tool that detects phishing websites in real time — right from your browser. It combines a Chrome extension that scans every URL you visit with a Flask + MongoDB backend that tracks your scan history, lets you manage your account, and gives you a proper dashboard to see what's been caught.
+A full-stack cybersecurity tool that detects phishing websites in real time right from your browser. It combines a Chrome extension that scans every URL you visit with a Flask + MongoDB backend that tracks your scan history, lets you manage your account, and gives you a proper dashboard to see what's been caught.
 
 
 ## What This Project Does
@@ -264,8 +264,4 @@ A few things worth adding if you want to take this further:
 | Password Hashing | Werkzeug (PBKDF2) |
 | Cross-Origin Requests | Flask-CORS |
 
----
 
-## License
-
-This is an educational project — feel free to use it, break it, and build on it. If you deploy it anywhere publicly, make sure to set a proper `SECRET_KEY` and lock down the CORS settings in `app.py`.
