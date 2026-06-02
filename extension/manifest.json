@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Phishing Detection Extension",
+  "name": "PHISHING DETECTION EXTENSION",
   "version": "1.0",
   "description": "Detects and warns users about potentially phishing websites",
   "permissions": [
